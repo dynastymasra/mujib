@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dynastymasra/mujib/service"
+
 	"github.com/dynastymasra/mujib/infrastructure/web/middleware"
 
 	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
@@ -16,7 +18,7 @@ import (
 	"github.com/urfave/negroni"
 )
 
-func Router(postgres *postgres.Connector) *mux.Router {
+func Router(postgres *postgres.Connector, service service.ArticleServicer) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
 	commonHandlers := negroni.New(
 		middleware.HTTPStatLogger(),
