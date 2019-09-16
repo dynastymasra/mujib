@@ -14,6 +14,7 @@ import (
 type ArticleServicer interface {
 	CreateArticle(context.Context, domain.Article) (*domain.Article, error)
 	FindArticleByID(context.Context, string) (*domain.Article, error)
+	FindAllArticle(context.Context) ([]*domain.Article, error)
 }
 
 type ArticleService struct {
@@ -55,4 +56,18 @@ func (a ArticleService) FindArticleByID(ctx context.Context, id string) (*domain
 	}
 
 	return article, nil
+}
+
+func (a ArticleService) FindAllArticle(ctx context.Context) ([]*domain.Article, error) {
+	log := logrus.WithFields(logrus.Fields{
+		config.RequestID: ctx.Value(config.HeaderRequestID),
+	})
+
+	articles, err := a.ArticleRepository.FindAll(ctx)
+	if err != nil {
+		log.WithError(err).Errorln("Failed find all article")
+		return nil, err
+	}
+
+	return articles, nil
 }

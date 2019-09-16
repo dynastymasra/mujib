@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dynastymasra/mujib/config"
+
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 )
@@ -28,6 +30,7 @@ func HTTPStatLogger() negroni.HandlerFunc {
 				"method":         r.Method,
 				"request_source": r.Header.Get("X-FORWARDED-FOR"),
 				"headers":        r.Header,
+				config.RequestID: r.Context().Value(config.HeaderRequestID),
 			}).Infoln("HTTP Request")
 		}
 	}

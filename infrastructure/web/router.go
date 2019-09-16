@@ -23,8 +23,8 @@ import (
 func Router(postgres *postgres.Connector, service service.ArticleServicer) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
 	commonHandlers := negroni.New(
-		middleware.HTTPStatLogger(),
 		middleware.RequestID(),
+		middleware.HTTPStatLogger(),
 	)
 
 	router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -51,6 +51,10 @@ func Router(postgres *postgres.Connector, service service.ArticleServicer) *mux.
 
 	router.Handle("/articles/{article_id:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}", commonHandlers.With(
 		negroni.WrapFunc(article.FindByID(service)),
+	)).Methods(http.MethodGet)
+
+	router.Handle("/articles", commonHandlers.With(
+		negroni.WrapFunc(article.FindAll(service)),
 	)).Methods(http.MethodGet)
 
 	return router
