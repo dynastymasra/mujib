@@ -21,10 +21,14 @@ func Ping(postgres *postgres.Connector) http.HandlerFunc {
 		if err := postgres.Ping(); err != nil {
 			log.WithError(err).Errorln("Failed ping postgres")
 
-			fmt.Fprintf(w, formatter.FailResponse(w, http.StatusInternalServerError, err.Error()).Stringify())
+			statusCode := http.StatusInternalServerError
+			w.WriteHeader(statusCode)
+			fmt.Fprintf(w, formatter.FailResponse(statusCode, err.Error()).Stringify())
 			return
 		}
 
-		fmt.Fprint(w, formatter.SuccessResponse(w, http.StatusOK, nil).Stringify())
+		statusCode := http.StatusOK
+		w.WriteHeader(statusCode)
+		fmt.Fprint(w, formatter.SuccessResponse(statusCode, nil).Stringify())
 	}
 }

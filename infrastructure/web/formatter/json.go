@@ -2,7 +2,6 @@ package formatter
 
 import (
 	"encoding/json"
-	"net/http"
 
 	"github.com/sirupsen/logrus"
 )
@@ -13,13 +12,11 @@ type JSONFormat struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-func FailResponse(w http.ResponseWriter, status int, msg string) JSONFormat {
-	w.WriteHeader(status)
+func FailResponse(status int, msg string) JSONFormat {
 	return JSONFormat{Status: status, Message: msg}
 }
 
-func SuccessResponse(w http.ResponseWriter, status int, data interface{}) JSONFormat {
-	w.WriteHeader(status)
+func SuccessResponse(status int, data interface{}) JSONFormat {
 	return JSONFormat{Status: status, Message: "Success", Data: data}
 }
 

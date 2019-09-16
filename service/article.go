@@ -38,11 +38,5 @@ func (a ArticleService) CreateArticle(ctx context.Context, article domain.Articl
 		return nil, err
 	}
 
-	result, err := a.ArticleRepository.FindByID(ctx, article.ID)
-	if err != nil {
-		log.WithError(err).Errorln("Failed get article from db")
-		return nil, err
-	}
-
-	return result, nil
+	return &article, nil
 }
