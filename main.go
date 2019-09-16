@@ -6,6 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/dynastymasra/mujib/console"
+
 	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
 
 	"github.com/urfave/cli"
@@ -56,6 +58,36 @@ func main() {
 		}
 
 		return nil
+	}
+
+	clientApp.Commands = []cli.Command{
+		{
+			Name:        "migrate:run",
+			Description: "Running Migration",
+			Action: func(c *cli.Context) error {
+				if err := console.RunDatabaseMigrations(postgresDB.DB.DB()); err != nil {
+					os.Exit(1)
+				}
+				return nil
+			},
+		},
+		{
+			Name:        "migrate:rollback",
+			Description: "Rollback Migration",
+			Action: func(c *cli.Context) error {
+				if err := console.RollbackLatestMigration(postgresDB.DB.DB()); err != nil {
+					os.Exit(1)
+				}
+				return nil
+			},
+		},
+		{
+			Name:        "migrate:create",
+			Description: "Create up and down migration files with timestamp",
+			Action: func(c *cli.Context) error {
+				return console.CreateMigrationFiles(c.Args().Get(0))
+			},
+		},
 	}
 
 	if err := clientApp.Run(os.Args); err != nil {
