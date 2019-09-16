@@ -8,7 +8,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/dynastymasra/mujib/domain"
-	"github.com/dynastymasra/mujib/infrastructure/repository"
 )
 
 type ArticleServicer interface {
@@ -18,10 +17,10 @@ type ArticleServicer interface {
 }
 
 type ArticleService struct {
-	ArticleRepository *repository.ArticleRepository
+	ArticleRepository domain.ArticleRepository
 }
 
-func NewArticleService(articleRepo *repository.ArticleRepository) ArticleService {
+func NewArticleService(articleRepo domain.ArticleRepository) ArticleService {
 	return ArticleService{
 		ArticleRepository: articleRepo,
 	}
