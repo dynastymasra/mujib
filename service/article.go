@@ -13,6 +13,7 @@ import (
 
 type ArticleServicer interface {
 	CreateArticle(context.Context, domain.Article) (*domain.Article, error)
+	FindArticleByID(context.Context, string) (*domain.Article, error)
 }
 
 type ArticleService struct {
@@ -39,4 +40,19 @@ func (a ArticleService) CreateArticle(ctx context.Context, article domain.Articl
 	}
 
 	return &article, nil
+}
+
+func (a ArticleService) FindArticleByID(ctx context.Context, id string) (*domain.Article, error) {
+	log := logrus.WithFields(logrus.Fields{
+		config.RequestID: ctx.Value(config.HeaderRequestID),
+		"article_id":     id,
+	})
+
+	article, err := a.ArticleRepository.FindByID(ctx, id)
+	if err != nil {
+		log.WithError(err).Errorln("Failed find by id article")
+		return nil, err
+	}
+
+	return article, nil
 }
