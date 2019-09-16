@@ -21,6 +21,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.4.0
+	github.com/stretchr/testify v1.2.2
 	github.com/urfave/cli v1.22.1
 	github.com/urfave/negroni v1.0.0
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect

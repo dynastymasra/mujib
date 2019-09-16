@@ -10,8 +10,6 @@ import (
 
 	"github.com/dynastymasra/mujib/infrastructure/web/middleware"
 
-	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
-
 	"github.com/dynastymasra/mujib/infrastructure/web/controller"
 
 	"github.com/dynastymasra/mujib/config"
@@ -20,7 +18,7 @@ import (
 	"github.com/urfave/negroni"
 )
 
-func Router(postgres *postgres.Connector, service service.ArticleServicer) *mux.Router {
+func Router(db, service service.ArticleServicer) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
 	commonHandlers := negroni.New(
 		middleware.RequestID(),
@@ -41,7 +39,7 @@ func Router(postgres *postgres.Connector, service service.ArticleServicer) *mux.
 
 	// Probes
 	router.Handle("/ping", commonHandlers.With(
-		negroni.WrapFunc(controller.Ping(postgres)),
+		negroni.WrapFunc(controller.Ping(provider)),
 	)).Methods(http.MethodGet, http.MethodHead)
 
 	// article group

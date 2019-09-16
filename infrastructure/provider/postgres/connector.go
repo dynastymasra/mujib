@@ -17,17 +17,14 @@ var (
 	once resync.Once
 )
 
-type Connector struct {
-	DB *gorm.DB
-}
-
-func Connect(config config.PostgresConfig) (*Connector, error) {
+func Connect(config config.PostgresConfig) (*gorm.DB, error) {
 	dbURL := config.ConnectionString()
 
 	once.Do(func() {
 		db, err = gorm.Open("postgres", dbURL)
 		if err != nil {
 			logrus.WithError(err).WithField("db_url", dbURL).Errorln("Cannot connect to DB")
+			db = nil
 			return
 		}
 
@@ -36,29 +33,30 @@ func Connect(config config.PostgresConfig) (*Connector, error) {
 
 		if err := db.DB().Ping(); err != nil {
 			logrus.WithError(err).Errorln("Cannot ping database")
+			db = nil
 			return
 		}
 
 		db.LogMode(config.LogEnabled())
 	})
 
-	return &Connector{DB: db}, err
+	return db, err
 }
 
-func (c *Connector) Ping() error {
-	if c.DB == nil {
+func Ping(db *gorm.DB) error {
+	if db == nil {
 		return errors.New("does't have database data")
 	}
-	return c.DB.DB().Ping()
+	return db.DB().Ping()
 }
 
-func (c *Connector) Close() error {
-	if c.DB == nil {
+func Close(db *gorm.DB) error {
+	if db == nil {
 		return errors.New("does't have database data")
 	}
-	return c.DB.DB().Close()
+	return db.DB().Close()
 }
 
-func (c *Connector) Reset() {
+func Reset() {
 	once.Reset()
 }
