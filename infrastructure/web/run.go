@@ -3,16 +3,18 @@ package web
 import (
 	"net/http"
 
+	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
+
 	"github.com/dynastymasra/mujib/config"
 	"github.com/gorilla/handlers"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/tylerb/graceful.v1"
 )
 
-func Run(server *graceful.Server) {
+func Run(server *graceful.Server, postgres *postgres.Connector) {
 	logrus.Infoln("Start run web application")
 
-	muxRouter := Router()
+	muxRouter := Router(postgres)
 
 	server.Server = &http.Server{
 		Addr: config.ServerAddress(),

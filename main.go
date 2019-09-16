@@ -41,7 +41,7 @@ func main() {
 		server := &graceful.Server{
 			Timeout: 0,
 		}
-		go web.Run(server)
+		go web.Run(server, postgresDB)
 		select {
 		case sig := <-stop:
 			<-server.StopChan()

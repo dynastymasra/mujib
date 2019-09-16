@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
+
 	"github.com/dynastymasra/mujib/infrastructure/web/controller"
 
 	"github.com/dynastymasra/mujib/config"
@@ -12,7 +14,7 @@ import (
 	"github.com/urfave/negroni"
 )
 
-func Router() *mux.Router {
+func Router(postgres *postgres.Connector) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
 	commonHandlers := negroni.New(
 	//middleware.HTTPStatLogger(),
@@ -28,7 +30,7 @@ func Router() *mux.Router {
 
 	// Probes
 	subRouter.Handle("/ping", commonHandlers.With(
-		negroni.WrapFunc(controller.Ping()),
+		negroni.WrapFunc(controller.Ping(postgres)),
 	)).Methods(http.MethodGet, http.MethodHead)
 
 	return router

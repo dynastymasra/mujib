@@ -12,17 +12,16 @@ import (
 )
 
 var (
-	Client *connector
-	db     *gorm.DB
-	err    error
-	once   resync.Once
+	db   *gorm.DB
+	err  error
+	once resync.Once
 )
 
-type connector struct {
+type Connector struct {
 	DB *gorm.DB
 }
 
-func Connect(config config.PostgresConfig) (*connector, error) {
+func Connect(config config.PostgresConfig) (*Connector, error) {
 	dbURL := config.ConnectionString()
 
 	once.Do(func() {
@@ -41,27 +40,25 @@ func Connect(config config.PostgresConfig) (*connector, error) {
 		}
 
 		db.LogMode(config.LogEnabled())
-
-		Client = &connector{DB: db}
 	})
 
-	return Client, err
+	return &Connector{DB: db}, err
 }
 
-func (c *connector) Ping() error {
+func (c *Connector) Ping() error {
 	if c.DB == nil {
 		return errors.New("does't have database data")
 	}
 	return c.DB.DB().Ping()
 }
 
-func (c *connector) Close() error {
+func (c *Connector) Close() error {
 	if c.DB == nil {
 		return errors.New("does't have database data")
 	}
 	return c.DB.DB().Close()
 }
 
-func (c *connector) Reset() {
+func (c *Connector) Reset() {
 	once.Reset()
 }
