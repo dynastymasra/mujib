@@ -14,7 +14,7 @@ type Config struct {
 	postgresConfig PostgresConfig
 }
 
-var config Config
+var config *Config
 
 func Load() {
 	viper.SetDefault(envServerAddress, ":8080")
@@ -33,7 +33,7 @@ func Load() {
 
 	viper.ReadInConfig()
 
-	config = Config{
+	config = &Config{
 		serverAddress: getString(envServerAddress),
 		logger: LoggerConfig{
 			format: getString(envLoggerFormat),
@@ -58,6 +58,10 @@ func Logger() LoggerConfig {
 
 func ServerAddress() string {
 	return config.serverAddress
+}
+
+func Postgres() PostgresConfig {
+	return config.postgresConfig
 }
 
 func checkEnvKey(key string) {
