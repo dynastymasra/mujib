@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dynastymasra/mujib/infrastructure/web/controller"
+
 	"github.com/dynastymasra/mujib/config"
 	"github.com/dynastymasra/mujib/infrastructure/web/formatter"
 	"github.com/gorilla/mux"
@@ -12,7 +14,7 @@ import (
 
 func Router() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
-	negroni.New(
+	commonHandlers := negroni.New(
 	//middleware.HTTPStatLogger(),
 	//middleware.RequestID(),
 	)
@@ -23,6 +25,11 @@ func Router() *mux.Router {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, formatter.FailResponse(w, http.StatusNotFound, config.ErrDataNotFound.Error()).Stringify())
 	})
+
+	// Probes
+	subRouter.Handle("/ping", commonHandlers.With(
+		negroni.WrapFunc(controller.Ping()),
+	)).Methods(http.MethodGet, http.MethodHead)
 
 	return router
 }
