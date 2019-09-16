@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/jinzhu/gorm"
+
 	"github.com/dynastymasra/mujib/infrastructure/web/controller/article"
 
 	"github.com/dynastymasra/mujib/service"
@@ -18,7 +20,7 @@ import (
 	"github.com/urfave/negroni"
 )
 
-func Router(db, service service.ArticleServicer) *mux.Router {
+func Router(db *gorm.DB, service service.ArticleServicer) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
 	commonHandlers := negroni.New(
 		middleware.RequestID(),
@@ -39,7 +41,7 @@ func Router(db, service service.ArticleServicer) *mux.Router {
 
 	// Probes
 	router.Handle("/ping", commonHandlers.With(
-		negroni.WrapFunc(controller.Ping(provider)),
+		negroni.WrapFunc(controller.Ping(db)),
 	)).Methods(http.MethodGet, http.MethodHead)
 
 	// article group

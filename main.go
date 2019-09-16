@@ -38,7 +38,7 @@ func main() {
 		logrus.WithError(err).Fatalln("Unable to open connection to postgres")
 	}
 
-	articleRepository := repository.NewArticleRepository(postgresDB.DB)
+	articleRepository := repository.NewArticleRepository(postgresDB)
 
 	articleService := service.NewArticleService(articleRepository)
 
@@ -72,7 +72,7 @@ func main() {
 			Name:        "migrate:run",
 			Description: "Running Migration",
 			Action: func(c *cli.Context) error {
-				if err := console.RunDatabaseMigrations(postgresDB.DB.DB()); err != nil {
+				if err := console.RunDatabaseMigrations(postgresDB.DB()); err != nil {
 					os.Exit(1)
 				}
 				return nil
@@ -82,7 +82,7 @@ func main() {
 			Name:        "migrate:rollback",
 			Description: "Rollback Migration",
 			Action: func(c *cli.Context) error {
-				if err := console.RollbackLatestMigration(postgresDB.DB.DB()); err != nil {
+				if err := console.RollbackLatestMigration(postgresDB.DB()); err != nil {
 					os.Exit(1)
 				}
 				return nil
