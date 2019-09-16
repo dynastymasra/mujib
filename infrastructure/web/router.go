@@ -1,8 +1,11 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/dynastymasra/mujib/config"
+	"github.com/dynastymasra/mujib/infrastructure/web/formatter"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
 )
@@ -18,8 +21,7 @@ func Router() *mux.Router {
 
 	subRouter.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNotFound)
-		//fmt.Fprintf(w, formatter.FailResponse(config.ErrDataNotFound.Error()).Stringify())
+		fmt.Fprint(w, formatter.FailResponse(w, http.StatusNotFound, config.ErrDataNotFound.Error()).Stringify())
 	})
 
 	return router
