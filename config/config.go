@@ -9,8 +9,9 @@ import (
 )
 
 type Config struct {
-	ServerAddress string
-	Logger        LoggerConfig
+	serverAddress  string
+	logger         LoggerConfig
+	postgresConfig PostgresConfig
 }
 
 var config Config
@@ -33,20 +34,30 @@ func Load() {
 	viper.ReadInConfig()
 
 	config = Config{
-		ServerAddress: getString(envServerAddress),
-		Logger: LoggerConfig{
+		serverAddress: getString(envServerAddress),
+		logger: LoggerConfig{
 			format: getString(envLoggerFormat),
 			level:  getString(envLogLevel),
+		},
+		postgresConfig: PostgresConfig{
+			host:        getString(envDatabaseHost),
+			port:        getInt(envDatabasePort),
+			name:        getString(envDatabaseName),
+			username:    getString(envDatabaseUsername),
+			password:    getString(envDatabasePassword),
+			maxOpenConn: getInt(envDatabaseMaxOpenConn),
+			maxIdleConn: getInt(envDatabaseMaxIdleConn),
+			logEnabled:  getBool(envDatabaseEnableLog),
 		},
 	}
 }
 
 func Logger() LoggerConfig {
-	return config.Logger
+	return config.logger
 }
 
 func ServerAddress() string {
-	return config.ServerAddress
+	return config.serverAddress
 }
 
 func checkEnvKey(key string) {
