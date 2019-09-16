@@ -12,7 +12,7 @@ type MockArticleService struct {
 }
 
 func (m *MockArticleService) CreateArticle(ctx context.Context, article domain.Article) (*domain.Article, error) {
-	args := m.Called(ctx, article)
+	args := m.Called(ctx)
 	return args.Get(0).(*domain.Article), args.Error(1)
 }
 
