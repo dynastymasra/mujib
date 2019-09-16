@@ -44,10 +44,14 @@ func Router(postgres *postgres.Connector, service service.ArticleServicer) *mux.
 		negroni.WrapFunc(controller.Ping(postgres)),
 	)).Methods(http.MethodGet, http.MethodHead)
 
-	// Order group
+	// article group
 	router.Handle("/articles", commonHandlers.With(
 		negroni.WrapFunc(article.Save(service)),
 	)).Methods(http.MethodPost)
+
+	router.Handle("/articles/{article_id:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}", commonHandlers.With(
+		negroni.WrapFunc(article.FindByID(service)),
+	)).Methods(http.MethodGet)
 
 	return router
 }

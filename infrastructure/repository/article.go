@@ -25,15 +25,15 @@ func (a *ArticleRepository) Save(ctx context.Context, article domain.Article) er
 
 func (a *ArticleRepository) FindByID(ctx context.Context, id string) (*domain.Article, error) {
 	var (
-		result *domain.Article
+		result domain.Article
 		query  = domain.Article{
 			ID: id,
 		}
 	)
 
-	err := a.db.Table(ArticleTableName).Where(query).First(result).Error
+	err := a.db.Table(ArticleTableName).Where(query).First(&result).Error
 
-	return result, err
+	return &result, err
 }
 
 func (a *ArticleRepository) FindAll(ctx context.Context) ([]*domain.Article, error) {
