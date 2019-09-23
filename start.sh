@@ -2,6 +2,7 @@
 
 case $1 in
   "run")
+    docker-compose build mujib
     docker-compose run --rm mujib migrate:run
     docker-compose up mujib
     ;;
