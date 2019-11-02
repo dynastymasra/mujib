@@ -16,7 +16,7 @@ func (m *MockProductRepository) Save(ctx context.Context, product domain.Product
 	return args.Error(0)
 }
 
-func (m *MockProductRepository) FindByID(ctx context.Context, id string) (*domain.Product, error) {
+func (m *MockProductRepository) FindByID(ctx context.Context, id int) (*domain.Product, error) {
 	args := m.Called(ctx, id)
 	return args.Get(0).(*domain.Product), args.Error(1)
 }

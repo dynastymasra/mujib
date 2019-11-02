@@ -23,7 +23,7 @@ func (r *ProductRepository) Save(ctx context.Context, product domain.Product) er
 	return r.db.Omit("created_at").Table(TableName).Save(&product).Error
 }
 
-func (r *ProductRepository) FindByID(ctx context.Context, id string) (*domain.Product, error) {
+func (r *ProductRepository) FindByID(ctx context.Context, id int) (*domain.Product, error) {
 	var (
 		result domain.Product
 		query  = domain.Product{
@@ -31,9 +31,11 @@ func (r *ProductRepository) FindByID(ctx context.Context, id string) (*domain.Pr
 		}
 	)
 
-	err := r.db.Table(TableName).Where(query).First(&result).Error
+	if err := r.db.Table(TableName).Where(query).First(&result).Error; err != nil {
+		return nil, err
+	}
 
-	return &result, err
+	return &result, nil
 }
 
 func (r *ProductRepository) Fetch(ctx context.Context) ([]domain.Product, error) {
@@ -45,7 +47,12 @@ func (r *ProductRepository) Fetch(ctx context.Context) ([]domain.Product, error)
 }
 
 func (r *ProductRepository) Update(ctx context.Context, product domain.Product) error {
-	return r.db.Omit("created_at").Table(TableName).Update(&product).Error
+	var (
+		query = domain.Product{
+			ID: product.ID,
+		}
+	)
+	return r.db.Table(TableName).Where(query).Update(&product).Error
 }
 
 func (r *ProductRepository) Delete(ctx context.Context, product domain.Product) error {

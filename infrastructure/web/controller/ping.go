@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
+	"github.com/dynastymasra/mujib/infrastructure/database/postgres"
 	"github.com/jinzhu/gorm"
 
 	"github.com/dynastymasra/mujib/config"
