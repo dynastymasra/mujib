@@ -22,7 +22,7 @@ func (m *MockProductService) FindByID(ctx context.Context, id string) (*domain.P
 }
 
 func (m *MockProductService) Fetch(ctx context.Context, from, size int) ([]domain.Product, error) {
-	args := m.Called(ctx)
+	args := m.Called(ctx, from, size)
 	return args.Get(0).([]domain.Product), args.Error(1)
 }
 
