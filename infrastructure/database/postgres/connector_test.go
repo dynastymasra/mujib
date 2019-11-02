@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"github.com/dynastymasra/mujib/config"
-	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
+	"github.com/dynastymasra/mujib/infrastructure/database/postgres"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
