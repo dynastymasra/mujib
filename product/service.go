@@ -35,6 +35,37 @@ func (s Service) Create(ctx context.Context, product domain.Product) (*domain.Pr
 	return &product, nil
 }
 
+func (s Service) FindByID(ctx context.Context, id string) (*domain.Product, error) {
+	log := logrus.WithFields(logrus.Fields{
+		config.RequestID: ctx.Value(config.HeaderRequestID),
+		"id":             id,
+	})
+
+	product, err := s.ProductRepository.FindByID(ctx, id)
+	if err != nil {
+		log.WithError(err).Errorln("Failed get product by id")
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (s Service) Fetch(ctx context.Context, from, size int) ([]domain.Product, error) {
+	log := logrus.WithFields(logrus.Fields{
+		config.RequestID: ctx.Value(config.HeaderRequestID),
+		"from":           from,
+		"size":           size,
+	})
+
+	products, err := s.ProductRepository.Fetch(ctx, from, size)
+	if err != nil {
+		log.WithError(err).Errorln("Failed fetch product")
+		return nil, err
+	}
+
+	return products, nil
+}
+
 func (s Service) Update(ctx context.Context, id string, product domain.Product) (*domain.Product, error) {
 	log := logrus.WithFields(logrus.Fields{
 		config.RequestID: ctx.Value(config.HeaderRequestID),

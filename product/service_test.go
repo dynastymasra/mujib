@@ -55,6 +55,45 @@ func (s *ServiceSuite) Test_Create_Failed() {
 	assert.Error(s.T(), err)
 }
 
+func (s *ServiceSuite) Test_FindByID_Success() {
+	id := uuid.NewV4().String()
+	s.productRepo.On("FindByID", context.Background(), id).Return(&domain.Product{ID: id}, nil)
+
+	product, err := s.productService.FindByID(context.Background(), id)
+
+	assert.NotNil(s.T(), product)
+	assert.Equal(s.T(), id, product.ID)
+	assert.NoError(s.T(), err)
+}
+
+func (s *ServiceSuite) Test_FindByID_Failed() {
+	id := uuid.NewV4().String()
+	s.productRepo.On("FindByID", context.Background(), id).Return((*domain.Product)(nil), assert.AnError)
+
+	product, err := s.productService.FindByID(context.Background(), id)
+
+	assert.Nil(s.T(), product)
+	assert.Error(s.T(), err)
+}
+
+func (s *ServiceSuite) Test_Fetch_Success() {
+	s.productRepo.On("Fetch", context.Background()).Return([]domain.Product{{ID: "id"}}, nil)
+
+	products, err := s.productService.Fetch(context.Background(), 0, 20)
+
+	assert.NotEmpty(s.T(), products)
+	assert.NoError(s.T(), err)
+}
+
+func (s *ServiceSuite) Test_Fetch_Failed() {
+	s.productRepo.On("Fetch", context.Background()).Return(([]domain.Product)(nil), assert.AnError)
+
+	products, err := s.productService.Fetch(context.Background(), 0, 20)
+
+	assert.Empty(s.T(), products)
+	assert.Error(s.T(), err)
+}
+
 func (s *ServiceSuite) Test_Update_Success() {
 	id := uuid.NewV4().String()
 	s.productRepo.On("FindByID", context.Background(), id).Return(&domain.Product{ID: id}, nil)

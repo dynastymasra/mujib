@@ -38,10 +38,10 @@ func (r *ProductRepository) FindByID(ctx context.Context, id string) (*domain.Pr
 	return &result, nil
 }
 
-func (r *ProductRepository) Fetch(ctx context.Context) ([]domain.Product, error) {
+func (r *ProductRepository) Fetch(ctx context.Context, offset, limit int) ([]domain.Product, error) {
 	var result []domain.Product
 
-	err := r.db.Table(TableName).Find(&result).Error
+	err := r.db.Table(TableName).Find(&result).Offset(offset).Limit(limit).Error
 
 	return result, err
 }

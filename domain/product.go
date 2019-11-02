@@ -46,13 +46,15 @@ func (a *ArrayString) Scan(value interface{}) error {
 type ProductRepository interface {
 	Save(context.Context, Product) error
 	FindByID(context.Context, string) (*Product, error)
-	Fetch(context.Context) ([]Product, error)
+	Fetch(context.Context, int, int) ([]Product, error)
 	Update(context.Context, Product) error
 	Delete(context.Context, Product) error
 }
 
 type ProductService interface {
 	Create(context.Context, Product) (*Product, error)
+	FindByID(context.Context, string) (*Product, error)
+	Fetch(context.Context, int, int) ([]Product, error)
 	Update(context.Context, string, Product) (*Product, error)
 	Delete(context.Context, string) error
 }

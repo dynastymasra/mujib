@@ -49,5 +49,15 @@ func Router(db *gorm.DB, service domain.ProductService) *mux.Router {
 		negroni.WrapFunc(productHandler.ProductCreate(service)),
 	)).Methods(http.MethodPost)
 
+	subRouter.Handle("/products/{product_id}", commonHandlers.With(
+		middleware.HTTPStatLogger(),
+		negroni.WrapFunc(productHandler.ProductFindByID(service)),
+	)).Methods(http.MethodGet)
+
+	subRouter.Handle("/products", commonHandlers.With(
+		middleware.HTTPStatLogger(),
+		negroni.WrapFunc(productHandler.ProductFindAll(service)),
+	)).Methods(http.MethodGet)
+
 	return subRouter
 }

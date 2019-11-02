@@ -126,7 +126,7 @@ func (p *ProductRepositorySuite) Test_Fetch_Success() {
 
 	p.ProductRepository.Save(context.Background(), product)
 
-	resp, err := p.ProductRepository.Fetch(context.Background())
+	resp, err := p.ProductRepository.Fetch(context.Background(), 0, 20)
 
 	assert.NotEmpty(p.T(), resp)
 	assert.NoError(p.T(), err)
