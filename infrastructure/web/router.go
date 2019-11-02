@@ -4,58 +4,50 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/dynastymasra/mujib/delivery/http/formatter"
+	productHandler "github.com/dynastymasra/mujib/delivery/http/handler"
+	"github.com/dynastymasra/mujib/domain"
+
 	"github.com/jinzhu/gorm"
-
-	"github.com/dynastymasra/mujib/infrastructure/web/controller/article"
-
-	"github.com/dynastymasra/mujib/service"
 
 	"github.com/dynastymasra/mujib/infrastructure/web/middleware"
 
-	"github.com/dynastymasra/mujib/infrastructure/web/controller"
+	"github.com/dynastymasra/mujib/infrastructure/web/handler"
 
 	"github.com/dynastymasra/mujib/config"
-	"github.com/dynastymasra/mujib/infrastructure/web/formatter"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
 )
 
-func Router(db *gorm.DB, service service.ArticleServicer) *mux.Router {
+func Router(db *gorm.DB, service domain.ProductService) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true).UseEncodedPath()
+	subRouter := router.PathPrefix("/v1/").Subrouter().UseEncodedPath()
 	commonHandlers := negroni.New(
 		middleware.RequestID(),
-		middleware.HTTPStatLogger(),
 	)
 
-	router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	subRouter.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprint(w, formatter.FailResponse(http.StatusNotFound, config.ErrDataNotFound.Error()).Stringify())
+		fmt.Fprint(w, formatter.FailResponse(config.ErrDataNotFound.Error()).Stringify())
 	})
 
-	router.MethodNotAllowedHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	subRouter.MethodNotAllowedHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprint(w, formatter.FailResponse(http.StatusMethodNotAllowed, config.ErrDataNotFound.Error()).Stringify())
+		fmt.Fprint(w, formatter.FailResponse(config.ErrDataNotFound.Error()).Stringify())
 	})
 
 	// Probes
-	router.Handle("/ping", commonHandlers.With(
-		negroni.WrapFunc(controller.Ping(db)),
+	subRouter.Handle("/ping", commonHandlers.With(
+		negroni.WrapFunc(handler.Ping(db)),
 	)).Methods(http.MethodGet, http.MethodHead)
 
-	// article group
-	router.Handle("/articles", commonHandlers.With(
-		negroni.WrapFunc(article.Save(service)),
+	// product group
+	subRouter.Handle("/products", commonHandlers.With(
+		middleware.HTTPStatLogger(),
+		negroni.WrapFunc(productHandler.ProductCreate(service)),
 	)).Methods(http.MethodPost)
 
-	router.Handle("/articles/{article_id:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}", commonHandlers.With(
-		negroni.WrapFunc(article.FindByID(service)),
-	)).Methods(http.MethodGet)
-
-	router.Handle("/articles", commonHandlers.With(
-		negroni.WrapFunc(article.FindAll(service)),
-	)).Methods(http.MethodGet)
-
-	return router
+	return subRouter
 }

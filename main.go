@@ -6,6 +6,10 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/dynastymasra/mujib/infrastructure/web"
+	"github.com/dynastymasra/mujib/product"
+	"github.com/dynastymasra/mujib/product/repository"
+
 	"github.com/dynastymasra/mujib/console"
 
 	"github.com/dynastymasra/mujib/infrastructure/database/postgres"
@@ -33,9 +37,8 @@ func main() {
 		logrus.WithError(err).Fatalln("Unable to open connection to postgres")
 	}
 
-	//productRepository := repository.NewProductRepository(postgresDB)
-	//
-	//articleService := service.NewArticleService(articleRepository)
+	productRepository := repository.NewProductRepository(postgresDB)
+	productService := product.NewService(productRepository)
 
 	clientApp := cli.NewApp()
 	clientApp.Name = config.ServiceName
@@ -45,7 +48,7 @@ func main() {
 		server := &graceful.Server{
 			Timeout: 0,
 		}
-		//go web.Run(server, postgresDB, articleService)
+		go web.Run(server, postgresDB, productService)
 		select {
 		case sig := <-stop:
 			<-server.StopChan()

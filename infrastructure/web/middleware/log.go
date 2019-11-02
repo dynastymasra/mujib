@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/dynastymasra/mujib/config"
@@ -20,27 +19,16 @@ func HTTPStatLogger() negroni.HandlerFunc {
 		responseTime := time.Now()
 		deltaTime := responseTime.Sub(startTime)
 
-		if !isHealthCheckURL(r.URL.String()) {
-			logrus.WithFields(logrus.Fields{
-				"request_time":   startTime.Format(time.RFC3339),
-				"delta_time":     deltaTime,
-				"response_time":  responseTime.Format(time.RFC3339),
-				"request_proxy":  r.RemoteAddr,
-				"url":            r.URL.Path,
-				"method":         r.Method,
-				"request_source": r.Header.Get("X-FORWARDED-FOR"),
-				"headers":        r.Header,
-				config.RequestID: r.Context().Value(config.HeaderRequestID),
-			}).Infoln("HTTP Request")
-		}
-	}
-}
-
-func isHealthCheckURL(url string) bool {
-	switch {
-	case strings.Contains(url, "/ping"):
-		return true
-	default:
-		return false
+		logrus.WithFields(logrus.Fields{
+			"request_time":   startTime.Format(time.RFC3339),
+			"delta_time":     deltaTime,
+			"response_time":  responseTime.Format(time.RFC3339),
+			"request_proxy":  r.RemoteAddr,
+			"url":            r.URL.Path,
+			"method":         r.Method,
+			"request_source": r.Header.Get("X-FORWARDED-FOR"),
+			"headers":        r.Header,
+			config.RequestID: r.Context().Value(config.HeaderRequestID),
+		}).Infoln("HTTP Request")
 	}
 }

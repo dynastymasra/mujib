@@ -1,16 +1,16 @@
-package controller
+package handler
 
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/dynastymasra/mujib/delivery/http/formatter"
 
 	"github.com/dynastymasra/mujib/infrastructure/database/postgres"
 	"github.com/jinzhu/gorm"
 
 	"github.com/dynastymasra/mujib/config"
 	"github.com/sirupsen/logrus"
-
-	"github.com/dynastymasra/mujib/infrastructure/web/formatter"
 )
 
 func Ping(db *gorm.DB) http.HandlerFunc {
@@ -22,14 +22,12 @@ func Ping(db *gorm.DB) http.HandlerFunc {
 		if err := postgres.Ping(db); err != nil {
 			log.WithError(err).Errorln("Failed ping postgres")
 
-			statusCode := http.StatusInternalServerError
-			w.WriteHeader(statusCode)
-			fmt.Fprintf(w, formatter.FailResponse(statusCode, err.Error()).Stringify())
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, formatter.FailResponse(err.Error()).Stringify())
 			return
 		}
 
-		statusCode := http.StatusOK
-		w.WriteHeader(statusCode)
-		fmt.Fprint(w, formatter.SuccessResponse(statusCode, nil).Stringify())
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, formatter.SuccessResponse().Stringify())
 	}
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"github.com/dynastymasra/mujib/domain"
-	"github.com/dynastymasra/mujib/infrastructure/web/controller/article"
+	"github.com/dynastymasra/mujib/infrastructure/web/handler/article"
 	"github.com/gorilla/mux"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"

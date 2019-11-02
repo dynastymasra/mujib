@@ -12,7 +12,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dynastymasra/mujib/infrastructure/web/controller/article"
+	"github.com/dynastymasra/mujib/infrastructure/web/handler/article"
 
 	"github.com/dynastymasra/mujib/config"
 	"github.com/dynastymasra/mujib/test"

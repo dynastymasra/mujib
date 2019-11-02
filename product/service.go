@@ -48,11 +48,9 @@ func (s Service) Update(ctx context.Context, id string, product domain.Product) 
 		return nil, err
 	}
 
-	log = log.WithField("before", prod)
-
 	product.ID = id
 	if err := s.ProductRepository.Update(ctx, product); err != nil {
-		log.WithError(err).Errorln("Failed update product")
+		log.WithField("before", prod).WithError(err).Errorln("Failed update product")
 		return nil, err
 	}
 
