@@ -27,7 +27,7 @@ func (m *MockProductService) Fetch(ctx context.Context, from, size int) ([]domai
 }
 
 func (m *MockProductService) Update(ctx context.Context, id string, product domain.Product) (*domain.Product, error) {
-	args := m.Called(ctx, id, product)
+	args := m.Called(ctx, id)
 	return args.Get(0).(*domain.Product), args.Error(1)
 }
 
