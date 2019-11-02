@@ -11,7 +11,7 @@ import (
 
 	"github.com/dynastymasra/mujib/console"
 
-	"github.com/dynastymasra/mujib/infrastructure/provider/postgres"
+	"github.com/dynastymasra/mujib/infrastructure/database/postgres"
 
 	"github.com/urfave/cli"
 
