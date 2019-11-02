@@ -10,7 +10,7 @@ import (
 type ArrayString []string
 
 type Product struct {
-	ID                    int         `json:"product_id" gorm:"column:id;primary_key" validate:"omitempty"`
+	ID                    string      `json:"product_id" gorm:"column:id;primary_key" validate:"omitempty"`
 	Name                  string      `json:"name" gorm:"column:name;" validate:"required,max=255"`
 	ImageClosed           string      `json:"image_closed" gorm:"column:image_closed" validate:"required"`
 	ImageOpen             string      `json:"image_open" gorm:"column:image_open" validate:"required"`
@@ -45,7 +45,7 @@ func (a *ArrayString) Scan(value interface{}) error {
 
 type ProductRepository interface {
 	Save(context.Context, Product) error
-	FindByID(context.Context, int) (*Product, error)
+	FindByID(context.Context, string) (*Product, error)
 	Fetch(context.Context) ([]Product, error)
 	Update(context.Context, Product) error
 	Delete(context.Context, Product) error
@@ -53,5 +53,6 @@ type ProductRepository interface {
 
 type ProductService interface {
 	Create(context.Context, Product) (*Product, error)
+	Update(context.Context, string, Product) (*Product, error)
 	Delete(context.Context, string) error
 }

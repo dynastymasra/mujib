@@ -23,7 +23,7 @@ func (r *ProductRepository) Save(ctx context.Context, product domain.Product) er
 	return r.db.Omit("created_at").Table(TableName).Save(&product).Error
 }
 
-func (r *ProductRepository) FindByID(ctx context.Context, id int) (*domain.Product, error) {
+func (r *ProductRepository) FindByID(ctx context.Context, id string) (*domain.Product, error) {
 	var (
 		result domain.Product
 		query  = domain.Product{

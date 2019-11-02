@@ -6,16 +6,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/dynastymasra/mujib/infrastructure/repository"
-	"github.com/dynastymasra/mujib/service"
-
 	"github.com/dynastymasra/mujib/console"
 
 	"github.com/dynastymasra/mujib/infrastructure/database/postgres"
 
 	"github.com/urfave/cli"
-
-	"github.com/dynastymasra/mujib/infrastructure/web"
 
 	"gopkg.in/tylerb/graceful.v1"
 
@@ -38,9 +33,9 @@ func main() {
 		logrus.WithError(err).Fatalln("Unable to open connection to postgres")
 	}
 
-	articleRepository := repository.NewArticleRepository(postgresDB)
-
-	articleService := service.NewArticleService(articleRepository)
+	//productRepository := repository.NewProductRepository(postgresDB)
+	//
+	//articleService := service.NewArticleService(articleRepository)
 
 	clientApp := cli.NewApp()
 	clientApp.Name = config.ServiceName
@@ -50,7 +45,7 @@ func main() {
 		server := &graceful.Server{
 			Timeout: 0,
 		}
-		go web.Run(server, postgresDB, articleService)
+		//go web.Run(server, postgresDB, articleService)
 		select {
 		case sig := <-stop:
 			<-server.StopChan()

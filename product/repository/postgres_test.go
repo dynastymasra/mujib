@@ -3,9 +3,9 @@ package repository_test
 import (
 	"context"
 	"log"
-	"math/rand"
 	"testing"
-	"time"
+
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/stretchr/testify/assert"
 
@@ -49,9 +49,8 @@ func (p *ProductRepositorySuite) SetupTest() {
 }
 
 func product() domain.Product {
-	rand.Seed(time.Now().UnixNano())
 	return domain.Product{
-		ID:          rand.Intn(500),
+		ID:          uuid.NewV4().String(),
 		Name:        "Vanilla Toffee Bar Crunch",
 		ImageClosed: "/files/live/sites/systemsite/files/flavors/products/us/pint/open-closed-pints/vanilla-toffee-landing.png",
 		ImageOpen:   "/files/live/sites/systemsite/files/flavors/products/us/pint/open-closed-pints/vanilla-toffee-landing-open.png",
@@ -116,7 +115,7 @@ func (p *ProductRepositorySuite) Test_FindByID_Success() {
 }
 
 func (p *ProductRepositorySuite) Test_FindByID_Failed() {
-	resp, err := p.ProductRepository.FindByID(context.Background(), 129328)
+	resp, err := p.ProductRepository.FindByID(context.Background(), uuid.NewV4().String())
 
 	assert.Nil(p.T(), resp)
 	assert.Error(p.T(), err)
