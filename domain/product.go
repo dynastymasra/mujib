@@ -16,10 +16,10 @@ type Product struct {
 	ImageOpen             string      `json:"image_open" gorm:"column:image_open" validate:"required"`
 	Description           string      `json:"description" gorm:"column:description" validate:"required"`
 	Story                 string      `json:"story" gorm:"column:story" validate:""`
-	SourcingValues        ArrayString `json:"sourcing_values" gorm:"column:sourcing_values" validate:"dive,required"`
-	Ingredients           ArrayString `json:"ingredients" gorm:"column:ingredients" validate:"dive,required"`
-	AllergyInfo           string      `json:"allergy_info" gorm:"column:allergy_info" validate:"omitempty"`
-	DietaryCertifications string      `json:"dietary_certifications" gorm:"column:dietary_certifications" validate:"omitempty"`
+	SourcingValues        ArrayString `json:"sourcing_values,omitempty" gorm:"column:sourcing_values" validate:"dive,required"`
+	Ingredients           ArrayString `json:"ingredients,omitempty" gorm:"column:ingredients" validate:"dive,required"`
+	AllergyInfo           *string     `json:"allergy_info,omitempty" gorm:"column:allergy_info" validate:"omitempty"`
+	DietaryCertifications *string     `json:"dietary_certifications,omitempty" gorm:"column:dietary_certifications" validate:"omitempty"`
 }
 
 func (Product) TableName() string {
