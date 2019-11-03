@@ -64,10 +64,10 @@ go tool cover -html=coverage.out
 ```
 `go tool` will generate GUI for test coverage. Available package or folder can be tested
 
-- `/infrastructure/provider/postgres`
-- `/infrastructure/repository`
-- `/infrastructure/web/controller/article`
-- `/service`
+- `/infrastructure/database/postgres`
+- `/delivery/http/handler`
+- `/product`
+- `/product/repository`
 
 ## API Documentation
 
@@ -77,6 +77,7 @@ This service documentation uses [![Run in Postman](https://run.pstmn.io/button.s
 
 + `SERVER_ADDRESS` - Address application is used default is `:8080`
 + `LOGGER_FORMAT` - Format specific for log, default value is `text`
++ `SECRET_KEY` - Server secret key, default is `tzimAitNeZEPAzhTs22Ni4cMccdM5cZs`
   - `text` - Log format will become standard text output, this used for development
   - `json` - Log format will become *JSON* format, usually used for production
 + `LOG_LEVEL` - Log level default is `debug`

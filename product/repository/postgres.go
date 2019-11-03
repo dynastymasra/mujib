@@ -41,7 +41,7 @@ func (r *ProductRepository) FindByID(ctx context.Context, id string) (*domain.Pr
 func (r *ProductRepository) Fetch(ctx context.Context, offset, limit int) ([]domain.Product, error) {
 	var result []domain.Product
 
-	err := r.db.Table(TableName).Find(&result).Offset(offset).Limit(limit).Error
+	err := r.db.Table(TableName).Limit(limit).Offset(offset).Find(&result).Error
 
 	return result, err
 }
