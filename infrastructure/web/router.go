@@ -43,28 +43,35 @@ func Router(db *gorm.DB, service domain.ProductService) *mux.Router {
 		negroni.WrapFunc(handler.Ping(db)),
 	)).Methods(http.MethodGet, http.MethodHead)
 
+	secretKey := config.SecretKey()
+
 	// product group
 	subRouter.Handle("/products", commonHandlers.With(
+		middleware.Authorization(secretKey),
 		middleware.HTTPStatLogger(),
 		negroni.WrapFunc(productHandler.ProductCreate(service)),
 	)).Methods(http.MethodPost)
 
 	subRouter.Handle("/products/{product_id}", commonHandlers.With(
+		middleware.Authorization(secretKey),
 		middleware.HTTPStatLogger(),
 		negroni.WrapFunc(productHandler.ProductFindByID(service)),
 	)).Methods(http.MethodGet)
 
 	subRouter.Handle("/products", commonHandlers.With(
+		middleware.Authorization(secretKey),
 		middleware.HTTPStatLogger(),
 		negroni.WrapFunc(productHandler.ProductFindAll(service)),
 	)).Methods(http.MethodGet)
 
 	subRouter.Handle("/products/{product_id}", commonHandlers.With(
+		middleware.Authorization(secretKey),
 		middleware.HTTPStatLogger(),
 		negroni.WrapFunc(productHandler.ProductUpdate(service)),
 	)).Methods(http.MethodPut)
 
 	subRouter.Handle("/products/{product_id}", commonHandlers.With(
+		middleware.Authorization(secretKey),
 		middleware.HTTPStatLogger(),
 		negroni.WrapFunc(productHandler.ProductDelete(service)),
 	)).Methods(http.MethodDelete)

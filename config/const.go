@@ -1,11 +1,13 @@
 package config
 
 const (
-	ServiceName = "Avalon"
-	Version     = "0.1.0"
-	RequestID   = "request_id"
+	ServiceName   = "Avalon"
+	Version       = "0.1.0"
+	RequestID     = "request_id"
+	Authorization = "Authorization"
 
 	envServerAddress = "SERVER_ADDRESS"
+	envSecretKey     = "SECRET_KEY"
 
 	// Headers
 	HeaderRequestID = "X-Request-ID"

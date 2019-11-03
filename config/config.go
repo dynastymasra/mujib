@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	serverAddress  string
+	secretKey      string
 	logger         LoggerConfig
 	postgresConfig PostgresConfig
 }
@@ -20,6 +21,7 @@ func Load() {
 	viper.SetDefault(envServerAddress, ":8080")
 	viper.SetDefault(envLogLevel, "debug")
 	viper.SetDefault(envLoggerFormat, "text")
+	viper.SetDefault(envSecretKey, "tzimAitNeZEPAzhTs22Ni4cMccdM5cZs")
 
 	viper.AutomaticEnv()
 
@@ -35,6 +37,7 @@ func Load() {
 
 	config = &Config{
 		serverAddress: getString(envServerAddress),
+		secretKey:     getString(envSecretKey),
 		logger: LoggerConfig{
 			format: getString(envLoggerFormat),
 			level:  getString(envLogLevel),
@@ -54,6 +57,10 @@ func Load() {
 
 func Logger() LoggerConfig {
 	return config.logger
+}
+
+func SecretKey() string {
+	return config.secretKey
 }
 
 func ServerAddress() string {
